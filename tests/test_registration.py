@@ -67,3 +67,31 @@ def test_invalid_password_registration(driver):
     # Ждем появления сообщения об ошибке
     error_msg = wait_for_element(driver, By.CSS_SELECTOR, ERROR_PASSWORD[1])
     assert error_msg.is_displayed()
+
+def test_constructor_sections(driver):
+    driver.get(BASE_URL)
+    # Ждем и кликаем по кнопке "Конструктор"
+    constructor_button = wait_for_element(driver, By.CSS_SELECTOR, BUTTON_CONSTRUCTOR[1])
+    constructor_button.click()
+    # Ждем появления разделов: «Булки», «Соусы», «Начинки»
+    buns_section = wait_for_element(driver, By.CSS_SELECTOR, SECTION_BUNS[1])
+    sauces_section = wait_for_element(driver, By.CSS_SELECTOR, SECTION_SAUCES[1])
+    fillings_section = wait_for_element(driver, By.CSS_SELECTOR, SECTION_FILLINGS[1])
+    assert buns_section.is_displayed()
+    assert sauces_section.is_displayed()
+    assert fillings_section.is_displayed()
+
+
+@pytest.mark.parametrize("section_locator, section_name", [
+    (SECTION_BUNS[1], "Булки"),
+    (SECTION_SAUCES[1], "Соусы"),
+    (SECTION_FILLINGS[1], "Начинки")
+])
+def test_constructor_section(driver, section_locator, section_name):
+    driver.get(BASE_URL)
+    # Ждем и кликаем по кнопке "Конструктор"
+    constructor_button = wait_for_element(driver, By.CSS_SELECTOR, BUTTON_CONSTRUCTOR[1])
+    constructor_button.click()
+    # Ожидаем, пока раздел станет видимым
+    section = wait_for_element(driver, By.CSS_SELECTOR, section_locator)
+    assert section.is_displayed(), f"Раздел '{section_name}' не отображается"
