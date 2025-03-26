@@ -3,6 +3,11 @@
 from faker import Faker
 import random
 import string
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+
+
 
 fake = Faker()
 
@@ -30,3 +35,15 @@ def generate_password(length: int = 8) -> str:
     if length < 6:
         length = 6
     return fake.password(length=length, special_chars=False, digits=True, upper_case=True, lower_case=True)
+
+def wait_for_visible_element(driver, by, locator, timeout=10):
+    """
+    Ждет, пока элемент станет видимым на странице.
+    
+    :param driver: экземпляр WebDriver
+    :param by: способ поиска (например, "xpath")
+    :param locator: значение локатора
+    :param timeout: время ожидания (по умолчанию 10 секунд)
+    :return: найденный и видимый элемент или выбросит TimeoutException
+    """
+    return WebDriverWait(driver, timeout).until(EC.visibility_of_element_located((by, locator)))
