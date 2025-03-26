@@ -13,22 +13,23 @@ TEST_PASSWORD = "correctpassword"
 
 def test_login_from_main_page(driver):
     driver.get(BASE_URL)
-    # Ждем появления кнопки "Войти в аккаунт" и кликаем по ней
-    login_button = wait_for_element(driver, By.CSS_SELECTOR, BUTTON_LOGIN[1])
+    # Ждем, пока кнопка "Войти в аккаунт" станет видимой и кликаем по ней
+    login_button = wait_for_visible_element(driver, BUTTON_LOGIN[0], BUTTON_LOGIN[1])
     login_button.click()
 
     # Ждем появления полей ввода и вводим данные
-    email_field = wait_for_element(driver, By.CSS_SELECTOR, INPUT_EMAIL[1])
-    password_field = wait_for_element(driver, By.CSS_SELECTOR, INPUT_PASSWORD[1])
+    email_field = wait_for_visible_element(driver, INPUT_EMAIL[0], INPUT_EMAIL[1])
+    password_field = wait_for_visible_element(driver, INPUT_PASSWORD[0], INPUT_PASSWORD[1])
     email_field.send_keys(TEST_EMAIL)
     password_field.send_keys(TEST_PASSWORD)
 
-    # Ждем появления кнопки отправки (предположим, селектор "button.login-submit")
-    submit_button = wait_for_element(driver, By.CSS_SELECTOR, "button.login-submit")
+    # Ждем, пока кнопка отправки формы станет видимой, и кликаем по ней
+    submit_button = wait_for_visible_element(driver, "css selector", "button.login-submit")
     submit_button.click()
 
-    # Проверяем, что после входа отображается "Личный кабинет"
-    assert "Личный кабинет" in driver.page_source
+    # Ждем, пока элемент "Личный кабинет" станет видимым – это подтверждает успешный вход
+    personal_account = wait_for_visible_element(driver, BUTTON_PERSONAL_ACCOUNT[0], BUTTON_PERSONAL_ACCOUNT[1])
+    assert personal_account.is_displayed(), "Элемент 'Личный кабинет' не виден после входа"
 
 
 def test_login_from_personal_account(driver):
